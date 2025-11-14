@@ -3,11 +3,13 @@ import React, { useState, useEffect } from "react";
 import { Task } from "@/types";
 
 const TaskList = () => {
+    {/* State management for tasks and form inputs */}
     const [tasks, setTasks] = useState<Task[]>([]);
     const [newDescription, setNewDescription] = useState("");
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editingDescription, setEditingDescription] = useState("");
 
+    {/* Handlers for form inputs and task actions */}
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNewDescription(e.target.value);
     };
@@ -66,6 +68,7 @@ const TaskList = () => {
     const completedCount = tasks.filter(t => t.completed).length;
     const incompleteCount = tasks.length - completedCount;
 
+ {/* Would be nice to change the buttons to icons if I have the time */}
     return (
         <main className="px-4 py-10 text-center flex flex-col min-h-screen">
             <h1 className="text-3xl font-bold mb-6">Task List</h1>
@@ -141,8 +144,8 @@ const TaskList = () => {
                 }
             </ul >
             <div>
-                <p>Completed: {completedCount}</p>
-                <p>Incomplete: {incompleteCount}</p>
+                <p>Completed Tasks: {completedCount}</p>
+                <p>Incomplete Tasks: {incompleteCount}</p>
             </div>
         </main >
     )

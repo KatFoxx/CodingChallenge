@@ -1,15 +1,17 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Task } from "@/types";
+import { TaskCategory } from "@/types";
 
 const TaskList = () => {
-    {/* State management for tasks and form inputs */}
+    {/* State management for tasks and form inputs */ }
     const [tasks, setTasks] = useState<Task[]>([]);
     const [newDescription, setNewDescription] = useState("");
     const [editingId, setEditingId] = useState<string | null>(null);
     const [editingDescription, setEditingDescription] = useState("");
+    const [category, setCategory] = useState<TaskCategory>("Work");
 
-    {/* Handlers for form inputs and task actions */}
+    {/* Handlers for form inputs and task actions */ }
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNewDescription(e.target.value);
     };
@@ -22,6 +24,7 @@ const TaskList = () => {
             completed: false,
             createdAt: new Date(),
             urgent: false,
+            category: category,
         };
         setTasks(prev => [...prev, newTask]);
         setNewDescription("");
@@ -32,7 +35,7 @@ const TaskList = () => {
     const handleToggleComplete = (id: string) => {
         setTasks(prev =>
             prev.map(task =>
-                task.id === id && !task.completed ? { ...task, completed: true }
+                task.id === id ? { ...task, completed: !task.completed, urgent: false }
                     : task
             )
         );
@@ -51,6 +54,9 @@ const TaskList = () => {
         setEditingId(null);
         setEditingDescription("");
     };
+    const handleCategoryChange = (tasks: Task) => {
+        setCategory(tasks.category as TaskCategory);
+    }
     useEffect(() => {
         const interval = setInterval(() => {
             setTasks(prev =>
@@ -68,19 +74,20 @@ const TaskList = () => {
     const completedCount = tasks.filter(t => t.completed).length;
     const incompleteCount = tasks.length - completedCount;
 
- {/* Would be nice to change the buttons to icons if I have the time */}
+    {/* Would be nice to change the buttons to icons if I have the time */ }
     return (
         <main className="px-4 py-10 text-center flex flex-col min-h-screen">
             <h1 className="text-3xl font-bold mb-6">Task List</h1>
             <form onSubmit={handleSubmit} className="mb-6">
                 <input value={newDescription} onChange={handleChange} />
+                <input type="text" value={category} onChange={(e) => setCategory(e.target.value as TaskCategory)} className="ml-2 p-1 border rounded" />
                 <input type="submit" value="Save" className="ml-2 p-1 border rounded bg-blue-500 text-white" />
             </form>
             <ul className="mb-6">
                 {tasks.map(task => (
                     <li
                         key={task.id}
-                        className={`mb-2 p-2 border rounded flex items-center justify-between ${task.urgent ? 'bg-red-200' : ''}`}
+                        className={`mb-2 p-2 border rounded flex items-center justify-between ${task.urgent ? 'bg-red-200 text-red-700' : ''}`}
                     >
 
                         <span className="w-40 text-left text-sm text-gray-500">
@@ -88,7 +95,7 @@ const TaskList = () => {
                         </span>
 
 
-                        <span className="flex-1 text-left px-4">
+                        <span className="flex-1 text-center px-4">
                             {editingId === task.id ? (
                                 <div className="flex items-center">
                                     <input
@@ -104,14 +111,17 @@ const TaskList = () => {
                                     </button>
                                 </div>
                             ) : (
-                                <span
+                                <><span
                                     style={{
                                         textDecoration: task.completed ? "line-through" : "none",
                                         cursor: task.completed ? "default" : "pointer"
                                     }}
                                 >
                                     {task.description}
-                                </span>
+                                </span><span className="ml-2">{task.category}</span>
+                                    {task.urgent ? (
+                                        <span className="ml-2 text-red-700 font-bold">Urgent</span>) : null}
+                                </>
                             )}
                         </span>
 
@@ -134,7 +144,6 @@ const TaskList = () => {
                             <input
                                 type="checkbox"
                                 checked={task.completed}
-                                disabled={task.completed}
                                 onChange={() => handleToggleComplete(task.id)}
                                 className="ml-2"
                             />

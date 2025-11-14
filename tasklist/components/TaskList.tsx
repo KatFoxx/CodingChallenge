@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import { Task, TASK_CATEGORIES } from "@/types";
 import { TaskCategory, SerializedTask } from "@/types";
 
@@ -138,11 +138,26 @@ const TaskList = () => {
                                     <input
                                         value={editingDescription}
                                         onChange={(e) => setEditingDescription(e.target.value)}
-                                        className="border p-1 rounded w-full"
+                                        className="text-center border p-1 rounded w-full"
                                     />
                                     <button onClick={() => handleEditSave(task.id)} className="ml-2 p-1 border rounded bg-green-500 text-white">
                                         Save
                                     </button>
+                                    <label htmlFor="category" className="ml-4 text-lg font-medium">
+                                        Category:
+                                    </label>
+                                    <select
+                                        id="category"
+                                        value={category}
+                                        onChange={(e) => setCategory(e.target.value as TaskCategory)}
+                                        className="ml-2 p-1 border rounded text-black bg-white"
+                                    >
+                                        {TASK_CATEGORIES.map((cat) => (
+                                            <option key={cat} value={cat}>
+                                                {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
                             ) : (
                                 <>

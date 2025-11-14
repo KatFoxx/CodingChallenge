@@ -10,3 +10,7 @@ export type Task = {
     urgent: boolean;
     category: TaskCategory;
 };
+
+export type SerializedTask = Omit<Task, "createdAt"> & {
+    createdAt: string;
+};
